@@ -1,79 +1,85 @@
 function getComputerChoice() {
     choice = Math.floor(Math.random() * (3 - 1 + 1) + 1);
-    if (choice === 1) 
-    {
-        console.log(`Your opponent have chosen Rock`);
+    if (choice === 1) {
         return "Rock";
     }
-    else if (choice === 2)
-    {
-        console.log(`Your opponent have chosen Paper`);
+    else if (choice === 2) {
         return "Paper";
     }
-    else 
-    {
-        console.log(`Your opponent have chosen Scissors`);
+    else {
         return "Scissors";
     }
 }
 
-function capitalize(word){
-    let letters = word.toLowerCase().split('');
-    letters[0] = letters[0].toUpperCase();
-    return letters.join('');
-}
-
-round = 1;
-function getHumanChoice() {
-    validChoices = ["Rock", "Paper", "Scissors"];
-    choice = prompt(`(Round ${round}) Enter your choice: `);
-    choice = capitalize(choice);
-
-    while(!validChoices.includes(choice))
-        {
-        choice = prompt(`${choice} is not a valid entry! \n(Round ${round}) Enter your choice:`);
-        choice = capitalize(choice);
-    }
-    console.log(`You have chosen ${choice}`)
-    return choice;
-}
-
-humanScore = 0;
-computerScore = 0;
+let humanScore = 0;
+let computerScore = 0;
+let round = 1;
 function playRound(humanChoice, computerChoice) {
-    humanChoice = capitalize(humanChoice);
-    if (humanChoice === computerChoice) console.log(`Both players have chosen ${humanChoice}, Draw!`);
+    if (round <= 5) {
+        if (humanChoice === computerChoice) {
+            alert(`Both players have chosen ${humanChoice}, Draw!\n`);
+        }
+        else if (computerChoice === "Rock" && humanChoice != "Scissors") {
+            alert(`Your opponent have chosen ${computerChoice}. \n${humanChoice} beats ${computerChoice}, You Win!`);
+            humanScore += 1;
+        }
+        else if (computerChoice === "Paper" && humanChoice != "Rock") {
+            alert(`Your opponent have chosen ${computerChoice}. \n${humanChoice} beats ${computerChoice}, You Win!`);
+            humanScore += 1;
+        }
+        else if (computerChoice === "Scissors" && humanChoice != "Paper") {
+            alert(`Your opponent have chosen ${computerChoice}. \n${humanChoice} beats ${computerChoice}, You Win!`);
+            humanScore += 1;
+        }
+        else {
+            alert(`Your opponent have chosen ${computerChoice}. \n${humanChoice} Loses to ${computerChoice}, You Lose!`);
+            computerScore += 1;
+        }
+        resultText = `Round ${round} \nYour score: ${humanScore} \nOpponent's score: ${computerScore}`;
+        resultsDiv.innerText = resultText;
 
-    else if (computerChoice === "Rock" && humanChoice != "Scissors") 
-    {
-        console.log(`${humanChoice} Beats ${computerChoice}, You Win!`);
-        humanScore += 1;
-    }
-    else if (computerChoice === "Paper" && humanChoice != "Rock") 
-    {
-        console.log(`${humanChoice} Beats ${computerChoice}, You Win!`);
-        humanScore += 1;
-    }
-    else if (computerChoice === "Scissors" && humanChoice != "Paper") 
-    {
-        console.log(`${humanChoice} Beats ${computerChoice}, You Win!`);
-        humanScore += 1;
-    }
-    else 
-    {
-        console.log(`${humanChoice} Loses to ${computerChoice}, You Lose!`);
-        computerScore += 1;
+        round += 1;
+        
+        if (round > 5) {
+            let finalMessage = ``;
+            if (humanScore === computerScore) {
+                finalMessage = `Your score: ${humanScore} \nOpponent's score: ${computerScore} \n It's a Draw!`;
+                resultsDiv.innerText = finalMessage;
+            }
+            else if (humanScore > computerScore) {
+                finalMessage = `Your score: ${humanScore} \nOpponent's score: ${computerScore} \n You won the game!`;
+                resultsDiv.innerText = finalMessage;
+            }
+            else if (humanScore < computerScore) {
+                finalMessage = `Your score: ${humanScore} \nOpponent's score: ${computerScore} \n You lost the game, better luck next time!`;
+                resultsDiv.innerText = finalMessage;
+            }
+        }
     }
 }
 
-while (round <= 5) {
-    playRound(getHumanChoice(), getComputerChoice());
-    round += 1;
-}
+// DOM Manipulation
 
-console.log(`Your score: ${humanScore} \n
-Opponent's score: ${computerScore}`);
+const rockButton = document.createElement("button");
+const rockButtonContent = document.createTextNode("Rock");
 
-if (humanScore > computerScore) console.log("Congratulations, you won the game!");
-else if (computerScore > humanScore) console.log("Oops, you lost. Better luck next time!");
-else console.log("It's a Draw!")
+const paperButton = document.createElement("button");
+const paperButtonContent = document.createTextNode("Paper");
+
+const scissorsButton = document.createElement("button");
+const scissorsButtonContent = document.createTextNode("Scissors");
+
+rockButton.appendChild(rockButtonContent);
+paperButton.appendChild(paperButtonContent);
+scissorsButton.appendChild(scissorsButtonContent);
+
+document.body.insertBefore(rockButton, document.currentScript);
+document.body.insertBefore(paperButton, document.currentScript);
+document.body.insertBefore(scissorsButton, document.currentScript);
+
+rockButton.addEventListener("click", e => playRound("Rock", getComputerChoice()));
+paperButton.addEventListener("click", e => playRound("Paper", getComputerChoice()));
+scissorsButton.addEventListener("click", e => playRound("Scissors", getComputerChoice()));
+
+const resultsDiv = document.createElement("div");
+document.body.insertBefore(resultsDiv, document.currentScript);
